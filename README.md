@@ -202,6 +202,66 @@ For detailed setup instructions, see [SETUP_INSTRUCTIONS.md](./SETUP_INSTRUCTION
 ✅ style: improve responsive UI and cleanup
 ```
 
+## 🚀 Production Deployment
+
+### Backend Deployment (Render/Heroku)
+
+#### Environment Variables for Production
+```env
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/dbname
+PORT=5000
+NODE_ENV=production
+FRONTEND_URL=https://your-frontend-domain.com
+```
+
+#### Deploy on Render
+1. Push code to GitHub
+2. Create account on [render.com](https://render.com)
+3. Create new Web Service
+4. Set build command: `npm install`
+5. Set start command: `npm start`
+6. Add environment variables in dashboard
+7. Deploy!
+
+#### Deploy on Heroku
+```bash
+heroku login
+heroku create app-name
+heroku config:set MONGODB_URI="your-uri"
+git push heroku main
+```
+
+### Frontend Deployment (Netlify/Vercel)
+
+#### Environment Variables for Production
+```env
+REACT_APP_API_URL=https://your-backend-domain.com
+```
+
+#### Deploy on Netlify
+1. Create account on [netlify.com](https://netlify.com)
+2. Connect GitHub repository
+3. Set build command: `npm run build`
+4. Set publish directory: `build`
+5. Add environment variables
+6. Deploy!
+
+#### Deploy on Vercel
+1. Create account on [vercel.com](https://vercel.com)
+2. Connect GitHub repository
+3. Add environment variables
+4. Deploy!
+
+### Production Checklist
+- ✅ Backend PORT set via environment variable
+- ✅ CORS configured for frontend domain
+- ✅ MongoDB connection string uses production database
+- ✅ NODE_ENV set to production
+- ✅ Frontend API URL uses production backend URL
+- ✅ No secrets committed to git (.env files in .gitignore)
+- ✅ _redirects file for Netlify routing
+- ✅ npm run build tested locally
+
 ## 🤝 Contributing
 
 1. Fork the repository
