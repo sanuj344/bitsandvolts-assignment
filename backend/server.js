@@ -21,8 +21,8 @@ app.get("/api/health", (req, res) => {
   res.json({ message: "Server is running" });
 });
 
-// Routes will be added here
-// app.use("/api/users", require("./routes/userRoutes"));
+// Routes
+app.use("/api/users", require("./routes/userRoutes"));
 
 // Error handling middleware
 app.use((err, req, res, next) => {
