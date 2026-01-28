@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box } from "@mui/material";
+import "./Pagination.css";
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   const handlePrevious = () => {
@@ -41,7 +41,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   };
 
   return (
-    <Box className="pagination-container">
+    <div className="pagination-container">
       <button
         onClick={handlePrevious}
         disabled={currentPage === 1}
@@ -63,7 +63,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       <span className="pagination-info">
         Page {currentPage} of {totalPages}
       </span>
-    </Box>
+    </div>
   );
 };
 
