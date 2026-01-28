@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import UserForm from "../components/UserForm";
 import { createUser } from "../services/api";
 import "./AddUser.css";
 

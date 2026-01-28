@@ -18,6 +18,7 @@ const ListUsers = () => {
 
   useEffect(() => {
     fetchUsers(currentPage, search);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, search]);
 
   const fetchUsers = async (page, searchQuery) => {

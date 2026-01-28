@@ -22,6 +22,7 @@ const EditUser = () => {
   useEffect(() => {
     fetchUserData();
   }, [id]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
 
   const fetchUserData = async () => {
     try {
