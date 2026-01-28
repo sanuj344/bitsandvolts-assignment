@@ -41,10 +41,10 @@ exports.createUser = async (req, res) => {
   }
 };
 
-// Get all users with pagination
+// Get all users with pagination and search
 exports.getUsers = async (req, res) => {
   try {
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 10, search = "" } = req.query;
 
     const pageNum = parseInt(page, 10);
     const limitNum = parseInt(limit, 10);
@@ -58,12 +58,22 @@ exports.getUsers = async (req, res) => {
 
     const skip = (pageNum - 1) * limitNum;
 
-    const users = await User.find()
+    // Build search query
+    const searchQuery = {};
+    if (search) {
+      searchQuery.$or = [
+        { firstName: { $regex: search, $options: "i" } },
+        { lastName: { $regex: search, $options: "i" } },
+        { email: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    const users = await User.find(searchQuery)
       .skip(skip)
       .limit(limitNum)
       .sort({ createdAt: -1 });
 
-    const totalUsers = await User.countDocuments();
+    const totalUsers = await User.countDocuments(searchQuery);
     const totalPages = Math.ceil(totalUsers / limitNum);
 
     res.json({
@@ -186,3 +196,57 @@ exports.deleteUser = async (req, res) => {
     });
   }
 };
+
+// Export users to CSV
+exports.exportToCSV = async (req, res) => {
+  try {
+    const users = await User.find().sort({ createdAt: -1 });
+
+    if (users.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No users found to export",
+      });
+    }
+
+    // Prepare CSV headers and data
+    const headers = [
+      "First Name",
+      "Last Name",
+      "Email",
+      "Mobile",
+      "Gender",
+      "Status",
+    ];
+    const rows = users.map((user) => [
+      user.firstName,
+      user.lastName,
+      user.email,
+      user.mobile,
+      user.gender,
+      user.status,
+    ]);
+
+    // Create CSV content
+    const csvContent = [
+      headers.join(","),
+      ...rows.map((row) => row.map((cell) => `"${cell}"`).join(",")),
+    ].join("\n");
+
+    // Set response headers for CSV download
+    res.setHeader("Content-Type", "text/csv");
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=users_" + Date.now() + ".csv"
+    );
+
+    res.send(csvContent);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error exporting users",
+      error: error.message,
+    });
+  }
+};
+

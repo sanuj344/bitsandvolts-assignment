@@ -6,6 +6,7 @@ const {
   getUserById,
   updateUser,
   deleteUser,
+  exportToCSV,
 } = require("../controllers/userController");
 const {
   validateUser,
@@ -14,6 +15,7 @@ const {
 
 // Routes
 router.post("/", validateUser, handleValidationErrors, createUser);
+router.get("/export/csv", exportToCSV);
 router.get("/", getUsers);
 router.get("/:id", getUserById);
 router.put("/:id", validateUser, handleValidationErrors, updateUser);
