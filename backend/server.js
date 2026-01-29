@@ -11,9 +11,23 @@ connectDB();
 
 const app = express();
 
-// CORS Configuration for Production
+// ✅ Allowed origins
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://bitsandvolts-assignment-n2zc.vercel.app"
+];
+
+// ✅ CORS Configuration
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true); // allow Postman / server-to-server
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -45,7 +59,7 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   const status = err.status || 500;
   const message = err.message || "Internal server error";
-  
+
   res.status(status).json({
     success: false,
     message: message,
