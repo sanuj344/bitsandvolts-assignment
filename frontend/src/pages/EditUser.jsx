@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getUserById, updateUser } from "../services/api";
@@ -19,12 +19,7 @@ const EditUser = () => {
   const [fetching, setFetching] = useState(true);
   const [errors, setErrors] = useState({});
 
-  useEffect(() => {
-    fetchUserData();
-  }, [id]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-
-  const fetchUserData = async () => {
+  const fetchUserData = useCallback(async () => {
     try {
       setFetching(true);
       const response = await getUserById(id);
@@ -37,7 +32,11 @@ const EditUser = () => {
     } finally {
       setFetching(false);
     }
-  };
+  }, [id, navigate]);
+
+  useEffect(() => {
+    fetchUserData();
+  }, [fetchUserData]);
 
   const validateForm = () => {
     const newErrors = {};
